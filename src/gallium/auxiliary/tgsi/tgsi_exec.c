@@ -2231,6 +2231,214 @@ fetch_sampler_unit(struct tgsi_exec_machine *mach,
    return unit;
 }
 
+
+void __attribute__ ((visibility ("default"))) mesaFetchTxf(struct tgsi_exec_machine *mach,
+         uint modifier, uint unit, int dim, float* coords,
+         int num_coord, float* dst, int num_dst, int quadIdx){
+   /*union tgsi_exec_channel r[4];
+   uint chan;
+   uint unit;
+   float rgba[TGSI_NUM_CHANNELS][TGSI_QUAD_SIZE];
+   int j;
+   int8_t offsets[3];
+   unsigned target;
+
+   // always fetch all 3 offsets, overkill but keeps code simple 
+   fetch_texel_offsets(mach, inst, offsets);
+   //assume all zeros
+
+   IFETCH(&r[3], 0, TGSI_CHAN_W);
+
+   if (inst->Instruction.Opcode == TGSI_OPCODE_SAMPLE_I ||
+       inst->Instruction.Opcode == TGSI_OPCODE_SAMPLE_I_MS) {
+      target = mach->SamplerViews[unit].Resource;
+   }
+   else {
+      target = inst->Texture.Texture;
+   }
+   switch(target) {
+   case TGSI_TEXTURE_3D:
+   case TGSI_TEXTURE_2D_ARRAY:
+   case TGSI_TEXTURE_SHADOW2D_ARRAY:
+   case TGSI_TEXTURE_2D_ARRAY_MSAA:
+      IFETCH(&r[2], 0, TGSI_CHAN_Z);
+      // fallthrough 
+   case TGSI_TEXTURE_2D:
+   case TGSI_TEXTURE_RECT:
+   case TGSI_TEXTURE_SHADOW1D_ARRAY:
+   case TGSI_TEXTURE_SHADOW2D:
+   case TGSI_TEXTURE_SHADOWRECT:
+   case TGSI_TEXTURE_1D_ARRAY:
+   case TGSI_TEXTURE_2D_MSAA:
+      IFETCH(&r[1], 0, TGSI_CHAN_Y);
+      // fallthrough 
+   case TGSI_TEXTURE_BUFFER:
+   case TGSI_TEXTURE_1D:
+   case TGSI_TEXTURE_SHADOW1D:
+      IFETCH(&r[0], 0, TGSI_CHAN_X);
+      break;
+   default:
+      assert(0);
+      break;
+   }      
+
+   mach->Sampler->get_texel(mach->Sampler, unit, r[0].i, r[1].i, r[2].i, r[3].i,
+                            offsets, rgba);
+
+   for (j = 0; j < TGSI_QUAD_SIZE; j++) {
+      r[0].f[j] = rgba[0][j];
+      r[1].f[j] = rgba[1][j];
+      r[2].f[j] = rgba[2][j];
+      r[3].f[j] = rgba[3][j];
+   }
+
+   if (inst->Instruction.Opcode == TGSI_OPCODE_SAMPLE_I ||
+       inst->Instruction.Opcode == TGSI_OPCODE_SAMPLE_I_MS) {
+      unsigned char swizzles[4];
+      swizzles[0] = inst->Src[1].Register.SwizzleX;
+      swizzles[1] = inst->Src[1].Register.SwizzleY;
+      swizzles[2] = inst->Src[1].Register.SwizzleZ;
+      swizzles[3] = inst->Src[1].Register.SwizzleW;
+
+      for (chan = 0; chan < TGSI_NUM_CHANNELS; chan++) {
+         if (inst->Dst[0].Register.WriteMask & (1 << chan)) {
+            store_dest(mach, &r[swizzles[chan]],
+                       &inst->Dst[0], inst, chan, TGSI_EXEC_DATA_FLOAT);
+         }
+      }
+   }
+   else {
+      for (chan = 0; chan < TGSI_NUM_CHANNELS; chan++) {
+         if (inst->Dst[0].Register.WriteMask & (1 << chan)) {
+            store_dest(mach, &r[chan], &inst->Dst[0], inst, chan, TGSI_EXEC_DATA_FLOAT);
+         }
+      }
+   }*/
+}
+
+void __attribute__ ((visibility ("default"))) mesaFetchTexture(struct tgsi_exec_machine *mach,
+         uint modifier, uint unit, uint sampler, int dim, float* coords,
+         int num_coord, float* dst, int num_dst, int quadIdx)
+{
+   const union tgsi_exec_channel *args[5], *proj = NULL;
+   union tgsi_exec_channel r[5];
+   union tgsi_exec_channel ic[5];
+   enum tgsi_sampler_control control = TGSI_SAMPLER_LOD_NONE;
+   uint chan;
+   int8_t offsets[3];
+   int shadow_ref, i, j;
+
+   assert(quadIdx < TGSI_QUAD_SIZE);
+
+   for(i=0; i < TGSI_QUAD_SIZE; i++){
+     for(j=0; j < num_coord; j++){
+        ic[j].f[i] = coords[i*TGSI_QUAD_SIZE+j];
+     }
+   }
+
+   //unit = fetch_sampler_unit(mach, inst, sampler);
+   //fetch_texel_offsets(mach, inst, offsets);
+   //assume all zeros
+   offsets[0] = offsets[1] = offsets[2] = 0;
+
+   assert(modifier != TEX_MODIFIER_LEVEL_ZERO);
+
+   /*dim = tgsi_util_get_texture_coord_dim(inst->Texture.Texture);
+   shadow_ref = tgsi_util_get_shadow_ref_src_index(inst->Texture.Texture);
+   assert(dim <= 4);
+   if (shadow_ref >= 0)
+      assert(shadow_ref >= dim && shadow_ref < ARRAY_SIZE(args));*/
+
+   /* fetch modifier to the last argument */
+   if (modifier != TEX_MODIFIER_NONE) {
+      const int last = ARRAY_SIZE(args) - 1;
+
+      //fetch modifier from src0.w or src1.x 
+      assert(sampler == 1);
+      if (sampler == 1) {
+         //assert(dim <= TGSI_CHAN_W && shadow_ref != TGSI_CHAN_W);
+         // //FETCH(&r[last], 0, TGSI_CHAN_W);
+         //fetch_source(mach, &r[last], &inst->Src[0], TGSI_CHAN_W, TGSI_EXEC_DATA_FLOAT);
+
+        for(i=0; i < TGSI_QUAD_SIZE; i++){
+           ic[last].f[i] = coords[i*TGSI_QUAD_SIZE+last];
+        }
+      } else {
+        assert(0 && "not supporting the case when sampler != 1");
+         /*
+         assert(shadow_ref != 4);
+         //FETCH(&r[last], 1, TGSI_CHAN_X);
+         fetch_source(mach, &r[last], &inst->Src[1], TGSI_CHAN_X, TGSI_EXEC_DATA_FLOAT);
+         */
+      }
+      /*
+      if (modifier != TEX_MODIFIER_PROJECTED) {
+         args[last] = &r[last];
+      }
+      else {
+         proj = &r[last];
+         args[last] = &ZeroVec;
+      }*/
+
+      args[last] = &ic[last];
+      /* point unused arguments to zero vector */
+      for (i = dim; i < last; i++){
+        for(j=0; j < TGSI_QUAD_SIZE; j++){
+          ic[i].f[j] = 0.0;
+        }
+        args[i] = &ic[i];
+         //args[i] = &ZeroVec;
+      }
+
+      if (modifier == TEX_MODIFIER_EXPLICIT_LOD)
+         control = TGSI_SAMPLER_LOD_EXPLICIT;
+      else if (modifier == TEX_MODIFIER_LOD_BIAS)
+         control = TGSI_SAMPLER_LOD_BIAS;
+      else if (modifier == TEX_MODIFIER_GATHER)
+         control = TGSI_SAMPLER_GATHER;
+   }
+   else {
+      for (i = dim; i < ARRAY_SIZE(args); i++)
+         args[i] = &ZeroVec;
+   }
+
+   //fetch coordinates
+   /*for (i = 0; i < dim; i++) {
+      //FETCH(&r[i], 0, TGSI_CHAN_X + i);
+      fetch_source(mach, &r[i], &inst->Src[0], TGSI_CHAN_X + i, TGSI_EXEC_DATA_FLOAT);
+
+      if (proj)
+         micro_div(&r[i], &r[i], proj);
+
+      args[i] = &r[i];
+   }*/
+
+   //fetch reference value 
+   /*if (shadow_ref >= 0) {
+      //FETCH(&r[shadow_ref], shadow_ref / 4, TGSI_CHAN_X + (shadow_ref % 4));
+      fetch_source(mach, &r[shadow_ref], &inst->Src[shadow_ref / 4], TGSI_CHAN_X + (shadow_ref % 4), TGSI_EXEC_DATA_FLOAT);
+
+      if (proj)
+         micro_div(&r[shadow_ref], &r[shadow_ref], proj);
+
+      args[shadow_ref] = &r[shadow_ref];
+   }*/
+
+   for(i=0; i < num_coord; i++){
+     args[i] = &ic[i];
+   }
+
+   fetch_texel(mach->Sampler, unit, unit,
+         args[0], args[1], args[2], args[3], args[4],
+         NULL, offsets, control,
+         &r[0], &r[1], &r[2], &r[3]);     /* R, G, B, A */
+
+
+   for(i=0; i < num_dst; i++){
+     dst[i] = r[i].f[quadIdx];
+   }
+}
+
 /*
  * execute a texture instruction.
  *
@@ -2973,6 +3181,9 @@ eval_perspective_coef(
    mach->Inputs[attrib].xyzw[chan].f[3] = (a0 + dadx + dady) / w[3];
 }
 
+
+extern bool gpgpusimSimulationActive();
+extern void gpgpusimAddFragQuad(struct  tgsi_exec_machine *mach, int first_input, int last_input, uint32_t quad_mask);
 
 typedef void (* eval_coef_func)(
    struct tgsi_exec_machine *mach,
@@ -6342,6 +6553,20 @@ tgsi_exec_machine_run( struct tgsi_exec_machine *mach, int start_pc )
       for (i = 0; i < mach->NumDeclarations; i++) {
          exec_declaration( mach, mach->Declarations+i );
       }
+   }
+
+   if(gpgpusimSimulationActive() && mach->ShaderType == PIPE_SHADER_FRAGMENT){
+     int first = INT_MAX;
+     int last = -1;
+     for (i = 0; i < mach->NumDeclarations; i++) {
+     const struct tgsi_full_declaration * decl = mach->Declarations+i;
+       if (decl->Declaration.File == TGSI_FILE_INPUT) {
+         first = decl->Range.First < first? decl->Range.First : first;
+         last = decl->Range.Last > last? decl->Range.Last : last;
+       }
+     }
+     gpgpusimAddFragQuad(mach, first, last, mach->NonHelperMask);
+     return 0;
    }
 
    {

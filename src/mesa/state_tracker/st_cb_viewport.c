@@ -37,6 +37,7 @@
 
 static void st_viewport(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct st_context *st = ctx->st;
    struct st_framebuffer *stdraw;
    struct st_framebuffer *stread;

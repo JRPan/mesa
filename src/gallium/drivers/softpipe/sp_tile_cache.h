@@ -76,7 +76,8 @@ struct softpipe_cached_tile
    } data;
 };
 
-#define NUM_ENTRIES 50
+//#define NUM_ENTRIES 50
+#define NUM_ENTRIES 1
 
 
 struct softpipe_tile_cache

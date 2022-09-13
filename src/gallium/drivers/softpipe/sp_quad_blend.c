@@ -1017,6 +1017,8 @@ blend_fallback(struct quad_stage *qs,
                }
             }
          }
+         //sp_flush_tile(tile);
+         sp_flush_tile_cache(softpipe->cbuf_cache[cbuf]);
       }
    }
 }
@@ -1097,6 +1099,8 @@ blend_single_add_src_alpha_inv_src_alpha(struct quad_stage *qs,
          }
       }
    }
+   //sp_flush_tile(tile);
+   sp_flush_tile_cache(qs->softpipe->cbuf_cache[0]);
 }
 
 static void
@@ -1159,6 +1163,8 @@ blend_single_add_one_one(struct quad_stage *qs,
          }
       }
    }
+   //sp_flush_tile(tile);
+   sp_flush_tile_cache(qs->softpipe->cbuf_cache[0]);
 }
 
 
@@ -1202,6 +1208,8 @@ single_output_color(struct quad_stage *qs,
          }
       }
    }
+   //sp_flush_tile(tile);
+   sp_flush_tile_cache(qs->softpipe->cbuf_cache[0]);
 }
 
 static void

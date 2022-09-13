@@ -43,6 +43,7 @@ st_GetSamplePosition(struct gl_context *ctx,
                      GLuint index,
                      GLfloat *outPos)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
 
    st_validate_state(st, ST_PIPELINE_UPDATE_FRAMEBUFFER);

@@ -77,7 +77,7 @@ struct softpipe_tex_cached_tile
  * seems too low to avoid cache thrashing in some cases (because
  * the cache is direct mapped, see tex_cache_pos() function).
  */
-#define NUM_TEX_TILE_ENTRIES 16
+#define NUM_TEX_TILE_ENTRIES 1
 
 struct softpipe_tex_tile_cache
 {
@@ -150,8 +150,8 @@ static inline const struct softpipe_tex_cached_tile *
 sp_get_cached_tile_tex(struct softpipe_tex_tile_cache *tc, 
                        union tex_tile_address addr )
 {
-   if (tc->last_tile->addr.value == addr.value)
-      return tc->last_tile;
+   /*if (tc->last_tile->addr.value == addr.value)
+      return tc->last_tile;*/
 
    return sp_find_cached_tile_tex( tc, addr );
 }

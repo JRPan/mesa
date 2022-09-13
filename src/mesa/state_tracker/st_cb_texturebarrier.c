@@ -48,6 +48,7 @@
 static void
 st_TextureBarrier(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct pipe_context *pipe = st_context(ctx)->pipe;
 
    pipe->texture_barrier(pipe, PIPE_TEXTURE_BARRIER_SAMPLER);
@@ -60,6 +61,7 @@ st_TextureBarrier(struct gl_context *ctx)
 static void
 st_FramebufferFetchBarrier(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct pipe_context *pipe = st_context(ctx)->pipe;
 
    pipe->texture_barrier(pipe, PIPE_TEXTURE_BARRIER_FRAMEBUFFER);
@@ -72,6 +74,7 @@ st_FramebufferFetchBarrier(struct gl_context *ctx)
 static void
 st_MemoryBarrier(struct gl_context *ctx, GLbitfield barriers)
 {
+   gpgpusimWait();
    struct pipe_context *pipe = st_context(ctx)->pipe;
    unsigned flags = 0;
 

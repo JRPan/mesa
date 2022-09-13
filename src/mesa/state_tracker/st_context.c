@@ -98,6 +98,7 @@ DEBUG_GET_ONCE_BOOL_OPTION(mesa_mvp_dp4, "MESA_MVP_DP4", FALSE)
 static void
 st_Enable(struct gl_context *ctx, GLenum cap, GLboolean state)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
 
    switch (cap) {
@@ -117,6 +118,7 @@ st_Enable(struct gl_context *ctx, GLenum cap, GLboolean state)
 static void
 st_query_memory_info(struct gl_context *ctx, struct gl_memory_info *out)
 {
+   gpgpusimWait();
    struct pipe_screen *screen = st_context(ctx)->pipe->screen;
    struct pipe_memory_info info;
 
@@ -199,8 +201,7 @@ st_vp_uses_current_values(const struct gl_context *ctx)
  * Called via ctx->Driver.UpdateState()
  */
 static void
-st_invalidate_state(struct gl_context *ctx)
-{
+st_invalidate_state_base(struct gl_context *ctx){
    GLbitfield new_state = ctx->NewState;
    struct st_context *st = st_context(ctx);
 
@@ -434,6 +435,17 @@ st_context_free_zombie_objects(struct st_context *st)
 {
    free_zombie_sampler_views(st);
    free_zombie_shaders(st);
+}
+
+
+/**
+ * Called via ctx->Driver.UpdateState()
+ */
+static void
+st_invalidate_state(struct gl_context *ctx)
+{
+   gpgpusimWait();
+   st_invalidate_state_base(ctx);
 }
 
 

@@ -46,6 +46,8 @@
 #include "sp_quad.h"
 #include "sp_quad_pipe.h"
 
+extern bool gpgpusimSkipCpFrames();
+extern bool gpgpusimSimulationActive();
 
 struct quad_shade_stage
 {
@@ -114,6 +116,11 @@ shade_quads(struct quad_stage *qs,
                          softpipe->const_buffer_size[PIPE_SHADER_FRAGMENT]);
 
    machine->InterpCoefs = quads[0]->coef;
+
+   //if in fast checkpoint reloading mode skip rendering quads and return
+   if(gpgpusimSkipCpFrames() && !gpgpusimSimulationActive()){
+     return;
+   }
 
    for (i = 0; i < nr; i++) {
       /* Only omit this quad from the output list if all the fragments

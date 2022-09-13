@@ -67,7 +67,10 @@
 #include "util/u_upload_mgr.h"
 #include "draw/draw_context.h"
 #include "cso_cache/cso_context.h"
-
+#include "tgsi/tgsi_dump.h"
+#include "tgsi/tgsi_exec.h"
+#include "gallium/drivers/softpipe/sp_context.h"
+#include "gallium/drivers/softpipe/sp_state.h"
 #if defined(PIPE_OS_LINUX) && !defined(ANDROID)
 #include <sched.h>
 #define HAVE_SCHED_GETCPU 1
@@ -114,6 +117,7 @@ translate_prim(const struct gl_context *ctx, unsigned prim)
 
    return prim;
 }
+
 
 static inline void
 prepare_draw(struct st_context *st, struct gl_context *ctx)
@@ -164,6 +168,17 @@ prepare_draw(struct st_context *st, struct gl_context *ctx)
  *
  * Try to keep this logic in sync with st_feedback_draw_vbo.
  */
+
+extern void gpgpusimSetContext(struct gl_context* ctx);
+
+//TODO: move function somewhere else
+void gpgpusimWait(){
+   //if gpgpusim is working on another draw call wait till it's done
+   while(gpgpusimIsBusy()){
+      usleep(1);
+   }
+}
+
 static void
 st_draw_vbo(struct gl_context *ctx,
             const struct _mesa_prim *prims,
@@ -181,7 +196,11 @@ st_draw_vbo(struct gl_context *ctx,
    unsigned i;
    unsigned start = 0;
 
+   gpgpusimWait();
+
    prepare_draw(st, ctx);
+
+   gpgpusimSetContext(ctx);
 
    /* Initialize pipe_draw_info. */
    info.primitive_restart = false;

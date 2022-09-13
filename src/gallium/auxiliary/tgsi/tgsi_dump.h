@@ -84,6 +84,9 @@ void
 tgsi_dump_property(
    const struct tgsi_full_property *prop );
 
+char* generate_tgsi_ptx_code( const struct tgsi_token *tokens, int shaderType, \
+                              int frame_num, int drawcall_num, const char* output_dir);
+
 #if defined __cplusplus
 }
 #endif

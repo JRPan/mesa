@@ -2,6 +2,6 @@
 	global:
 		gl*;
 		mgl*;
-	local:
 		*;
+	#local:
 };

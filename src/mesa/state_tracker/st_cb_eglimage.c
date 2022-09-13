@@ -181,6 +181,7 @@ st_egl_image_target_renderbuffer_storage(struct gl_context *ctx,
 					 struct gl_renderbuffer *rb,
 					 GLeglImageOES image_handle)
 {
+   gpgpusimWait();
    struct st_renderbuffer *strb = st_renderbuffer(rb);
    struct st_egl_image stimg;
    bool native_supported;
@@ -319,6 +320,7 @@ st_egl_image_target_texture_2d(struct gl_context *ctx, GLenum target,
 			       struct gl_texture_image *texImage,
 			       GLeglImageOES image_handle)
 {
+   gpgpusimWait();
    struct st_egl_image stimg;
    bool native_supported;
 

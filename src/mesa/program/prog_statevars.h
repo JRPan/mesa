@@ -38,6 +38,23 @@ extern "C" {
 struct gl_context;
 struct gl_program_parameter_list;
 
+/**
+ * Actual data for constant values of parameters.
+ */
+typedef union gl_constant_value
+{
+   GLfloat f;
+   GLint b;
+   GLint i;
+   GLuint u;
+} gl_constant_value;
+
+/**
+ * Number of STATE_* values we need to address any GL state.
+ * Used to dimension arrays.
+ */
+#define STATE_LENGTH 5
+
 
 /**
  * Used for describing GL state referenced from inside ARB vertex and
@@ -145,9 +162,11 @@ _mesa_program_state_flags(const gl_state_index16 state[STATE_LENGTH]);
 
 
 extern char *
-_mesa_program_state_string(const gl_state_index16 state[STATE_LENGTH]);
+_mesa_program_state_string(const gl_state_index state[STATE_LENGTH]);
 
-
+extern void __attribute__((visibility("default")))
+_mesa_fetch_state(struct gl_context *ctx, const gl_state_index state[],
+                  gl_constant_value *val);
 
 #ifdef __cplusplus
 }

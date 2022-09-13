@@ -401,6 +401,7 @@ st_ReadPixels(struct gl_context *ctx, GLint x, GLint y,
               const struct gl_pixelstore_attrib *pack,
               void *pixels)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct gl_renderbuffer *rb =
          _mesa_get_read_renderbuffer_for_format(ctx, format);

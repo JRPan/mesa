@@ -2984,6 +2984,7 @@ extern "C" {
 GLboolean
 _mesa_ir_link_shader(struct gl_context *ctx, struct gl_shader_program *prog)
 {
+   gpgpusimWait();
    assert(prog->data->LinkStatus);
 
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {

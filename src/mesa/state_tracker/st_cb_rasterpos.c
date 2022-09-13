@@ -222,6 +222,7 @@ new_draw_rastpos_stage(struct gl_context *ctx, struct draw_context *draw)
 static void
 st_RasterPos(struct gl_context *ctx, const GLfloat v[4])
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct draw_context *draw = st_get_draw_context(st);
    struct rastpos_stage *rs;

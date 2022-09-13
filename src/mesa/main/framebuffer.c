@@ -106,6 +106,7 @@ _mesa_create_framebuffer(const struct gl_config *visual)
 struct gl_framebuffer *
 _mesa_new_framebuffer(struct gl_context *ctx, GLuint name)
 {
+   gpgpusimWait();
    struct gl_framebuffer *fb;
    (void) ctx;
    assert(name != 0);

@@ -633,6 +633,7 @@ st_CopyImageSubData(struct gl_context *ctx,
                     int dst_x, int dst_y, int dst_z,
                     int src_width, int src_height)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
    struct pipe_resource *src_res, *dst_res;

@@ -99,6 +99,7 @@ struct dd_function_table {
     * made.
     */
    void (*UpdateState)(struct gl_context *ctx);
+   void (*UpdateState_base)(struct gl_context *ctx);
 
    /**
     * This is called whenever glFinish() is called.
@@ -109,6 +110,7 @@ struct dd_function_table {
     * This is called whenever glFlush() is called.
     */
    void (*Flush)( struct gl_context *ctx );
+   void (*Flush_base)( struct gl_context *ctx );
 
    /**
     * Clear the color/depth/stencil/accum buffer(s).
@@ -433,6 +435,15 @@ struct dd_function_table {
 			   bool flip_y);
 
    void (*UnmapRenderbuffer)(struct gl_context *ctx,
+			     struct gl_renderbuffer *rb);
+
+   void (*MapRenderbuffer_base)(struct gl_context *ctx,
+			   struct gl_renderbuffer *rb,
+			   GLuint x, GLuint y, GLuint w, GLuint h,
+			   GLbitfield mode,
+			   GLubyte **mapOut, GLint *rowStrideOut);
+
+   void (*UnmapRenderbuffer_base)(struct gl_context *ctx,
 			     struct gl_renderbuffer *rb);
 
    /**
@@ -1313,7 +1324,6 @@ struct dd_function_table {
    bool (*GetShaderProgramCompletionStatus)(struct gl_context *ctx,
                                             struct gl_shader_program *shprog);
 };
-
 
 /**
  * Per-vertex functions.

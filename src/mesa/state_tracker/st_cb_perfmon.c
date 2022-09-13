@@ -151,6 +151,7 @@ reset_perf_monitor(struct st_perf_monitor_object *stm,
 static struct gl_perf_monitor_object *
 st_NewPerfMonitor(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stq = ST_CALLOC_STRUCT(st_perf_monitor_object);
    if (stq)
       return &stq->base;
@@ -160,6 +161,7 @@ st_NewPerfMonitor(struct gl_context *ctx)
 static void
 st_DeletePerfMonitor(struct gl_context *ctx, struct gl_perf_monitor_object *m)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stm = st_perf_monitor_object(m);
    struct pipe_context *pipe = st_context(ctx)->pipe;
 
@@ -170,6 +172,7 @@ st_DeletePerfMonitor(struct gl_context *ctx, struct gl_perf_monitor_object *m)
 static GLboolean
 st_BeginPerfMonitor(struct gl_context *ctx, struct gl_perf_monitor_object *m)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stm = st_perf_monitor_object(m);
    struct pipe_context *pipe = st_context(ctx)->pipe;
    unsigned i;
@@ -202,6 +205,7 @@ fail:
 static void
 st_EndPerfMonitor(struct gl_context *ctx, struct gl_perf_monitor_object *m)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stm = st_perf_monitor_object(m);
    struct pipe_context *pipe = st_context(ctx)->pipe;
    unsigned i;
@@ -220,6 +224,7 @@ st_EndPerfMonitor(struct gl_context *ctx, struct gl_perf_monitor_object *m)
 static void
 st_ResetPerfMonitor(struct gl_context *ctx, struct gl_perf_monitor_object *m)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stm = st_perf_monitor_object(m);
    struct pipe_context *pipe = st_context(ctx)->pipe;
 
@@ -236,6 +241,7 @@ static GLboolean
 st_IsPerfMonitorResultAvailable(struct gl_context *ctx,
                                 struct gl_perf_monitor_object *m)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stm = st_perf_monitor_object(m);
    struct pipe_context *pipe = st_context(ctx)->pipe;
    unsigned i;
@@ -268,6 +274,7 @@ st_GetPerfMonitorResult(struct gl_context *ctx,
                         GLuint *data,
                         GLint *bytesWritten)
 {
+   gpgpusimWait();
    struct st_perf_monitor_object *stm = st_perf_monitor_object(m);
    struct pipe_context *pipe = st_context(ctx)->pipe;
    unsigned i;
@@ -342,6 +349,7 @@ st_have_perfmon(struct st_context *st)
 static void
 st_InitPerfMonitorGroups(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct gl_perf_monitor_state *perfmon = &ctx->PerfMonitor;
    struct pipe_screen *screen = st->pipe->screen;

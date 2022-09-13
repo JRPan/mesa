@@ -134,6 +134,7 @@ gl_target_to_pipe(GLenum target)
 static struct gl_texture_image *
 st_NewTextureImage(struct gl_context * ctx)
 {
+   gpgpusimWait();
    DBG("%s\n", __func__);
    (void) ctx;
    return (struct gl_texture_image *) ST_CALLOC_STRUCT(st_texture_image);
@@ -144,6 +145,7 @@ st_NewTextureImage(struct gl_context * ctx)
 static void
 st_DeleteTextureImage(struct gl_context * ctx, struct gl_texture_image *img)
 {
+   gpgpusimWait();
    /* nothing special (yet) for st_texture_image */
    _mesa_delete_texture_image(ctx, img);
 }
@@ -153,6 +155,7 @@ st_DeleteTextureImage(struct gl_context * ctx, struct gl_texture_image *img)
 static struct gl_texture_object *
 st_NewTextureObject(struct gl_context * ctx, GLuint name, GLenum target)
 {
+   gpgpusimWait();
    struct st_texture_object *obj = ST_CALLOC_STRUCT(st_texture_object);
    if (!obj)
       return NULL;
@@ -186,6 +189,7 @@ static void
 st_DeleteTextureObject(struct gl_context *ctx,
                        struct gl_texture_object *texObj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_object *stObj = st_texture_object(texObj);
 
@@ -201,6 +205,7 @@ static void
 st_FreeTextureImageBuffer(struct gl_context *ctx,
                           struct gl_texture_image *texImage)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_object *stObj = st_texture_object(texImage->TexObject);
    struct st_texture_image *stImage = st_texture_image(texImage);
@@ -285,6 +290,7 @@ st_MapTextureImage(struct gl_context *ctx,
                    GLbitfield mode,
                    GLubyte **mapOut, GLint *rowStrideOut)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_image *stImage = st_texture_image(texImage);
    GLubyte *map;
@@ -345,6 +351,7 @@ st_UnmapTextureImage(struct gl_context *ctx,
                      struct gl_texture_image *texImage,
                      GLuint slice)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_image *stImage  = st_texture_image(texImage);
 
@@ -682,6 +689,7 @@ static GLboolean
 st_AllocTextureImageBuffer(struct gl_context *ctx,
                            struct gl_texture_image *texImage)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_image *stImage = st_texture_image(texImage);
    struct st_texture_object *stObj = st_texture_object(texImage->TexObject);
@@ -1453,6 +1461,7 @@ st_TexSubImage(struct gl_context *ctx, GLuint dims,
                GLenum format, GLenum type, const void *pixels,
                const struct gl_pixelstore_attrib *unpack)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_image *stImage = st_texture_image(texImage);
    struct st_texture_object *stObj = st_texture_object(texImage->TexObject);
@@ -1731,6 +1740,7 @@ st_TexImage(struct gl_context * ctx, GLuint dims,
             GLenum format, GLenum type, const void *pixels,
             const struct gl_pixelstore_attrib *unpack)
 {
+   gpgpusimWait();
    assert(dims == 1 || dims == 2 || dims == 3);
 
    prep_teximage(ctx, texImage, format, type);
@@ -1757,6 +1767,7 @@ st_CompressedTexSubImage(struct gl_context *ctx, GLuint dims,
                          GLsizei w, GLsizei h, GLsizei d,
                          GLenum format, GLsizei imageSize, const void *data)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_image *stImage = st_texture_image(texImage);
    struct st_texture_object *stObj = st_texture_object(texImage->TexObject);
@@ -1886,6 +1897,7 @@ st_CompressedTexImage(struct gl_context *ctx, GLuint dims,
                       struct gl_texture_image *texImage,
                       GLsizei imageSize, const void *data)
 {
+   gpgpusimWait();
    prep_teximage(ctx, texImage, GL_NONE, GL_NONE);
 
    /* only 2D and 3D compressed images are supported at this time */
@@ -1938,6 +1950,7 @@ st_GetTexSubImage(struct gl_context * ctx,
                   GLenum format, GLenum type, void * pixels,
                   struct gl_texture_image *texImage)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
    struct pipe_screen *screen = pipe->screen;
@@ -2465,6 +2478,7 @@ st_CopyTexSubImage(struct gl_context *ctx, GLuint dims,
                    struct gl_renderbuffer *rb,
                    GLint srcX, GLint srcY, GLsizei width, GLsizei height)
 {
+   gpgpusimWait();
    struct st_texture_image *stImage = st_texture_image(texImage);
    struct st_texture_object *stObj = st_texture_object(texImage->TexObject);
    struct st_renderbuffer *strb = st_renderbuffer(rb);
@@ -3006,6 +3020,7 @@ st_AllocTextureStorage(struct gl_context *ctx,
                        GLsizei levels, GLsizei width,
                        GLsizei height, GLsizei depth)
 {
+   gpgpusimWait();
    return st_texture_storage(ctx, texObj, levels,
                              width, height, depth,
                              NULL, 0);
@@ -3018,6 +3033,7 @@ st_TestProxyTexImage(struct gl_context *ctx, GLenum target,
                      mesa_format format, GLuint numSamples,
                      GLint width, GLint height, GLint depth)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
 
@@ -3074,6 +3090,7 @@ st_TextureView(struct gl_context *ctx,
                struct gl_texture_object *texObj,
                struct gl_texture_object *origTexObj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_object *orig = st_texture_object(origTexObj);
    struct st_texture_object *tex = st_texture_object(texObj);
@@ -3158,6 +3175,7 @@ st_ClearTexSubImage(struct gl_context *ctx,
                     GLsizei width, GLsizei height, GLsizei depth,
                     const void *clearValue)
 {
+   gpgpusimWait();
    static const char zeros[16] = {0};
    struct gl_texture_object *texObj = texImage->TexObject;
    struct st_texture_image *stImage = st_texture_image(texImage);
@@ -3207,6 +3225,7 @@ static void
 st_TexParameter(struct gl_context *ctx,
                 struct gl_texture_object *texObj, GLenum pname)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_object *stObj = st_texture_object(texObj);
 
@@ -3241,6 +3260,7 @@ st_SetTextureStorageForMemoryObject(struct gl_context *ctx,
                                     GLsizei height, GLsizei depth,
                                     GLuint64 offset)
 {
+   gpgpusimWait();
    return st_texture_storage(ctx, texObj, levels,
                              width, height, depth,
                              memObj, offset);
@@ -3250,6 +3270,7 @@ static GLuint64
 st_NewTextureHandle(struct gl_context *ctx, struct gl_texture_object *texObj,
                     struct gl_sampler_object *sampObj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_object *stObj = st_texture_object(texObj);
    struct pipe_context *pipe = st->pipe;
@@ -3275,6 +3296,7 @@ st_NewTextureHandle(struct gl_context *ctx, struct gl_texture_object *texObj,
 static void
 st_DeleteTextureHandle(struct gl_context *ctx, GLuint64 handle)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
 
@@ -3286,6 +3308,7 @@ static void
 st_MakeTextureHandleResident(struct gl_context *ctx, GLuint64 handle,
                              bool resident)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
 
@@ -3296,6 +3319,7 @@ st_MakeTextureHandleResident(struct gl_context *ctx, GLuint64 handle,
 static GLuint64
 st_NewImageHandle(struct gl_context *ctx, struct gl_image_unit *imgObj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
    struct pipe_image_view image;
@@ -3309,6 +3333,7 @@ st_NewImageHandle(struct gl_context *ctx, struct gl_image_unit *imgObj)
 static void
 st_DeleteImageHandle(struct gl_context *ctx, GLuint64 handle)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
 
@@ -3320,6 +3345,7 @@ static void
 st_MakeImageHandleResident(struct gl_context *ctx, GLuint64 handle,
                            GLenum access, bool resident)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
 

@@ -53,6 +53,7 @@ st_BlitFramebuffer(struct gl_context *ctx,
                    GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                    GLbitfield mask, GLenum filter)
 {
+   gpgpusimWait();
    const GLbitfield depthStencil = (GL_DEPTH_BUFFER_BIT |
                                     GL_STENCIL_BUFFER_BIT);
    struct st_context *st = st_context(ctx);

@@ -68,6 +68,7 @@ st_transform_feedback_object(struct gl_transform_feedback_object *obj)
 static struct gl_transform_feedback_object *
 st_new_transform_feedback(struct gl_context *ctx, GLuint name)
 {
+   gpgpusimWait();
    struct st_transform_feedback_object *obj;
 
    obj = CALLOC_STRUCT(st_transform_feedback_object);
@@ -84,6 +85,7 @@ static void
 st_delete_transform_feedback(struct gl_context *ctx,
                              struct gl_transform_feedback_object *obj)
 {
+   gpgpusimWait();
    struct st_transform_feedback_object *sobj =
          st_transform_feedback_object(obj);
    unsigned i;
@@ -105,6 +107,7 @@ static void
 st_begin_transform_feedback(struct gl_context *ctx, GLenum mode,
                             struct gl_transform_feedback_object *obj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
    struct st_transform_feedback_object *sobj =
@@ -155,6 +158,7 @@ static void
 st_pause_transform_feedback(struct gl_context *ctx,
                            struct gl_transform_feedback_object *obj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    cso_set_stream_outputs(st->cso_context, 0, NULL, NULL);
 }
@@ -164,6 +168,7 @@ static void
 st_resume_transform_feedback(struct gl_context *ctx,
                              struct gl_transform_feedback_object *obj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_transform_feedback_object *sobj =
       st_transform_feedback_object(obj);
@@ -182,6 +187,7 @@ static void
 st_end_transform_feedback(struct gl_context *ctx,
                           struct gl_transform_feedback_object *obj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_transform_feedback_object *sobj =
          st_transform_feedback_object(obj);

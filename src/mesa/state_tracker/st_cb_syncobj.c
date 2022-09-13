@@ -47,6 +47,7 @@ struct st_sync_object {
 
 static struct gl_sync_object *st_new_sync_object(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct st_sync_object *so = CALLOC_STRUCT(st_sync_object);
 
    simple_mtx_init(&so->mutex, mtx_plain);
@@ -56,6 +57,7 @@ static struct gl_sync_object *st_new_sync_object(struct gl_context *ctx)
 static void st_delete_sync_object(struct gl_context *ctx,
                                   struct gl_sync_object *obj)
 {
+   gpgpusimWait();
    struct pipe_screen *screen = st_context(ctx)->pipe->screen;
    struct st_sync_object *so = (struct st_sync_object*)obj;
 
@@ -68,6 +70,7 @@ static void st_delete_sync_object(struct gl_context *ctx,
 static void st_fence_sync(struct gl_context *ctx, struct gl_sync_object *obj,
                           GLenum condition, GLbitfield flags)
 {
+   gpgpusimWait();
    struct pipe_context *pipe = st_context(ctx)->pipe;
    struct st_sync_object *so = (struct st_sync_object*)obj;
 
@@ -81,6 +84,7 @@ static void st_client_wait_sync(struct gl_context *ctx,
                                 struct gl_sync_object *obj,
                                 GLbitfield flags, GLuint64 timeout)
 {
+   gpgpusimWait();
    struct pipe_context *pipe = st_context(ctx)->pipe;
    struct pipe_screen *screen = pipe->screen;
    struct st_sync_object *so = (struct st_sync_object*)obj;
@@ -123,6 +127,7 @@ static void st_client_wait_sync(struct gl_context *ctx,
 
 static void st_check_sync(struct gl_context *ctx, struct gl_sync_object *obj)
 {
+   gpgpusimWait();
    st_client_wait_sync(ctx, obj, 0, 0);
 }
 
@@ -130,6 +135,7 @@ static void st_server_wait_sync(struct gl_context *ctx,
                                 struct gl_sync_object *obj,
                                 GLbitfield flags, GLuint64 timeout)
 {
+   gpgpusimWait();
    struct pipe_context *pipe = st_context(ctx)->pipe;
    struct pipe_screen *screen = pipe->screen;
    struct st_sync_object *so = (struct st_sync_object*)obj;

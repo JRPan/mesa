@@ -30,6 +30,7 @@
   *   Keith Whitwell <keithw@vmware.com>
   *   Brian Paul
   */
+#include "GL/glcorearb.h"
 
 #include "util/u_math.h"
 #include "util/u_memory.h"
@@ -42,6 +43,7 @@
 #include "tgsi/tgsi_parse.h"
 #include "tgsi/tgsi_scan.h"
 #include "tgsi/tgsi_exec.h"
+#include "tgsi/tgsi_dump.h"
 
 
 struct exec_vertex_shader {
@@ -78,7 +80,14 @@ vs_exec_prepare(struct draw_vertex_shader *shader,
    }
 }
 
-
+extern bool gpgpusimSimulationActive();
+extern void gpgpusimGetOutputDir(const char** output_dir);
+extern void gpgpusimGetFrameDrawcallNum(int* frameNum, int* drawcallNum);
+extern void gpgpusimSetVertAttribsCount(
+      struct tgsi_exec_machine *mach,
+      int inputAttribsCount,
+      int outputAttribsCount);
+extern void gpgpusimAddVertex(struct tgsi_exec_machine* mach, int pos);
 
 /**
  * Simplified vertex shader interface for the pt paths.  Given the
@@ -111,6 +120,16 @@ vs_exec_run_linear(struct draw_vertex_shader *shader,
       assert(i < ARRAY_SIZE(machine->SystemValue));
       for (j = 0; j < TGSI_QUAD_SIZE; j++)
          machine->SystemValue[i].xyzw[0].i[j] = shader->draw->instance_id;
+   }
+
+
+   if(gpgpusimSimulationActive()){
+     gpgpusimSetVertAttribsCount(evs->machine, shader->info.num_inputs, shader->info.num_outputs);
+     int frame_num, drawcall_num;
+     const char* output_dir;
+     gpgpusimGetFrameDrawcallNum(&frame_num, &drawcall_num);
+     gpgpusimGetOutputDir(&output_dir);
+     char* vert_ptx_code = generate_tgsi_ptx_code(evs->machine->Tokens, GL_VERTEX_SHADER, frame_num, drawcall_num, output_dir);
    }
 
    for (i = 0; i < count; i += MAX_TGSI_VERTICES) {
@@ -170,6 +189,11 @@ vs_exec_run_linear(struct draw_vertex_shader *shader,
       /* Unswizzle all output results.
        */
       for (j = 0; j < max_vertices; j++) {
+
+         if(gpgpusimSimulationActive()){
+            gpgpusimAddVertex(machine, j);
+         }
+
          for (slot = 0; slot < shader->info.num_outputs; slot++) {
             enum tgsi_semantic name = shader->info.output_semantic_name[slot];
             if (clamp_vertex_color &&

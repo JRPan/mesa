@@ -1241,6 +1241,7 @@ st_ChooseTextureFormat(struct gl_context *ctx, GLenum target,
                        GLint internalFormat,
                        GLenum format, GLenum type)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    enum pipe_format pFormat;
    mesa_format mFormat;
@@ -1407,6 +1408,7 @@ void
 st_QueryInternalFormat(struct gl_context *ctx, GLenum target,
                        GLenum internalFormat, GLenum pname, GLint *params)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    /* The API entry-point gives us a temporary params buffer that is non-NULL
     * and guaranteed to have at least 16 elements.

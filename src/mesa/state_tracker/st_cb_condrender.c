@@ -52,6 +52,7 @@ static void
 st_BeginConditionalRender(struct gl_context *ctx, struct gl_query_object *q,
                           GLenum mode)
 {
+   gpgpusimWait();
    struct st_query_object *stq = st_query_object(q);
    struct st_context *st = st_context(ctx);
    uint m;
@@ -104,6 +105,7 @@ st_BeginConditionalRender(struct gl_context *ctx, struct gl_query_object *q,
 static void
 st_EndConditionalRender(struct gl_context *ctx, struct gl_query_object *q)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    (void) q;
 

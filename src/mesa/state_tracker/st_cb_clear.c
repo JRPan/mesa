@@ -422,6 +422,7 @@ is_stencil_masked(struct gl_context *ctx, struct gl_renderbuffer *rb)
 static void
 st_Clear(struct gl_context *ctx, GLbitfield mask)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct gl_renderbuffer *depthRb
       = ctx->DrawBuffer->Attachment[BUFFER_DEPTH].Renderbuffer;

@@ -41,6 +41,7 @@
 static struct gl_semaphore_object *
 st_semaphoreobj_alloc(struct gl_context *ctx, GLuint name)
 {
+   gpgpusimWait();
    struct st_semaphore_object *st_obj = ST_CALLOC_STRUCT(st_semaphore_object);
    if (!st_obj)
       return NULL;
@@ -53,6 +54,7 @@ static void
 st_semaphoreobj_free(struct gl_context *ctx,
                      struct gl_semaphore_object *semObj)
 {
+   gpgpusimWait();
    _mesa_delete_semaphore_object(ctx, semObj);
 }
 
@@ -62,6 +64,7 @@ st_import_semaphoreobj_fd(struct gl_context *ctx,
                        struct gl_semaphore_object *semObj,
                        int fd)
 {
+   gpgpusimWait();
    struct st_semaphore_object *st_obj = st_semaphore_object(semObj);
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
@@ -83,6 +86,7 @@ st_server_wait_semaphore(struct gl_context *ctx,
                          struct gl_texture_object **texObjs,
                          const GLenum *srcLayouts)
 {
+   gpgpusimWait();
    struct st_semaphore_object *st_obj = st_semaphore_object(semObj);
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;
@@ -130,6 +134,7 @@ st_server_signal_semaphore(struct gl_context *ctx,
                            struct gl_texture_object **texObjs,
                            const GLenum *dstLayouts)
 {
+   gpgpusimWait();
    struct st_semaphore_object *st_obj = st_semaphore_object(semObj);
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;

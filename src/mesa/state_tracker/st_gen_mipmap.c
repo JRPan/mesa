@@ -53,6 +53,7 @@ void
 st_generate_mipmap(struct gl_context *ctx, GLenum target,
                    struct gl_texture_object *texObj)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct st_texture_object *stObj = st_texture_object(texObj);
    struct pipe_resource *pt = st_get_texobj_resource(texObj);

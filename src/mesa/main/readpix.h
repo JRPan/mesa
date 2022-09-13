@@ -33,7 +33,7 @@ struct gl_context;
 struct gl_pixelstore_attrib;
 
 
-extern GLboolean
+extern GLboolean 
 _mesa_readpixels_needs_slow_path(const struct gl_context *ctx, GLenum format,
                                  GLenum type, GLboolean uses_blit);
 
@@ -51,7 +51,7 @@ _mesa_get_readpixels_transfer_ops(const struct gl_context *ctx,
                                   GLenum format, GLenum type,
                                   GLboolean uses_blit);
 
-extern void
+extern void __attribute__((visibility("default")))
 _mesa_readpixels(struct gl_context *ctx,
                  GLint x, GLint y, GLsizei width, GLsizei height,
                  GLenum format, GLenum type,

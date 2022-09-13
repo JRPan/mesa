@@ -145,6 +145,7 @@ _mesa_init_sampler_object(struct gl_sampler_object *sampObj, GLuint name)
 struct gl_sampler_object *
 _mesa_new_sampler_object(struct gl_context *ctx, GLuint name)
 {
+   gpgpusimWait();
    struct gl_sampler_object *sampObj = CALLOC_STRUCT(gl_sampler_object);
    if (sampObj) {
       _mesa_init_sampler_object(sampObj, name);

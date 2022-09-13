@@ -38,6 +38,7 @@
 static struct gl_memory_object *
 st_memoryobj_alloc(struct gl_context *ctx, GLuint name)
 {
+   gpgpusimWait();
    struct st_memory_object *st_obj = ST_CALLOC_STRUCT(st_memory_object);
    if (!st_obj)
       return NULL;
@@ -50,6 +51,7 @@ static void
 st_memoryobj_free(struct gl_context *ctx,
                   struct gl_memory_object *obj)
 {
+   gpgpusimWait();
    _mesa_delete_memory_object(ctx, obj);
 }
 
@@ -60,6 +62,7 @@ st_import_memoryobj_fd(struct gl_context *ctx,
                        GLuint64 size,
                        int fd)
 {
+   gpgpusimWait();
    struct st_memory_object *st_obj = st_memory_object(obj);
    struct st_context *st = st_context(ctx);
    struct pipe_context *pipe = st->pipe;

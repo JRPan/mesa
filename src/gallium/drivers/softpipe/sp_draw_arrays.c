@@ -44,6 +44,28 @@
 #include "sp_screen.h"
 
 #include "draw/draw_context.h"
+#include "GL/glcorearb.h"
+#include "tgsi/tgsi_exec.h"
+#include "tgsi/tgsi_dump.h"
+
+
+extern void gpgpusimInitializeCurrentDraw(struct tgsi_exec_machine* machine, void* sp, void* mapped_indices);
+extern void gpgpusimFinalizeCurrentDraw();
+extern bool gpgpusimSimulationActive();
+extern bool gpgpusimSkipCpFrames();
+extern void gpgpusimGetFrameDrawcallNum(int* frameNum, int* drawcallNum);
+extern void gpgpusimGetOutputDir(const char** output_dir);
+extern void gpgpusimDoFragmentShading();
+
+void __attribute__((visibility("default"))) finalize_softpipe_draw_vbo(struct softpipe_context *sp, const void* mapped_indices);
+
+extern void finalize_softpipe_draw_vbo(struct softpipe_context *sp, const void* mapped_indices){
+   struct softpipe_context *softpipe = softpipe_context(sp);
+   struct draw_context *draw = sp->draw;
+   unsigned i;
+
+   gpgpusimFinalizeCurrentDraw();
+}
 
 /**
  * This function handles drawing indexed and non-indexed prims,
@@ -79,6 +101,8 @@ softpipe_draw_vbo(struct pipe_context *pipe,
    if (sp->dirty) {
       softpipe_update_derived(sp, sp->reduced_api_prim);
    }
+
+
 
    /* Map vertex buffers */
    for (i = 0; i < sp->num_vertex_buffers; i++) {
@@ -128,20 +152,29 @@ softpipe_draw_vbo(struct pipe_context *pipe,
    draw_collect_pipeline_statistics(draw,
                                     sp->active_statistics_queries > 0);
 
+   if(gpgpusimSimulationActive()){
+     int frame_num, drawcall_num;
+     const char* output_dir;
+     gpgpusimGetFrameDrawcallNum(&frame_num, &drawcall_num);
+     gpgpusimGetOutputDir(&output_dir);
+     char* frag_ptx_code = generate_tgsi_ptx_code(sp->fs_machine->Tokens, GL_FRAGMENT_SHADER, frame_num, drawcall_num, output_dir);
+     gpgpusimInitializeCurrentDraw(sp->fs_machine, sp, mapped_indices); // softpipe->mapped_constants[PIPE);
+   }
+
    /* draw! */
    draw_vbo(draw, info);
 
    /* unmap vertex/index buffers - will cause draw module to flush */
    for (i = 0; i < sp->num_vertex_buffers; i++) {
-      draw_set_mapped_vertex_buffer(draw, i, NULL, 0);
+     draw_set_mapped_vertex_buffer(draw, i, NULL, 0);
    }
    if (mapped_indices) {
-      draw_set_indexes(draw, NULL, 0, 0);
+     draw_set_indexes(draw, NULL, 0, 0);
    }
 
    if (softpipe_screen(sp->pipe.screen)->use_llvm) {
-      softpipe_cleanup_vertex_sampling(sp);
-      softpipe_cleanup_geometry_sampling(sp);
+     softpipe_cleanup_vertex_sampling(sp);
+     softpipe_cleanup_geometry_sampling(sp);
    }
 
    /*
@@ -153,4 +186,10 @@ softpipe_draw_vbo(struct pipe_context *pipe,
 
    /* Note: leave drawing surfaces mapped */
    sp->dirty_render_cache = TRUE;
+
+   if(gpgpusimSimulationActive()) {
+     gpgpusimDoFragmentShading();
+   } else {
+     finalize_softpipe_draw_vbo(sp, mapped_indices);
+   }
 }

@@ -596,6 +596,7 @@ _mesa_FramebufferRenderbuffer_sw(struct gl_context *ctx,
                                  GLenum attachment,
                                  struct gl_renderbuffer *rb)
 {
+   gpgpusimWait();
    struct gl_renderbuffer_attachment *att;
 
    simple_mtx_lock(&fb->Mutex);

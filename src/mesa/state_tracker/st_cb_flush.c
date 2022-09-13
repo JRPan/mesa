@@ -82,14 +82,7 @@ st_finish(struct st_context *st)
    st_manager_flush_swapbuffers();
 }
 
-
-
-/**
- * Called via ctx->Driver.Flush()
- */
-static void
-st_glFlush(struct gl_context *ctx)
-{
+static void st_glFlush_base(struct gl_context *ctx){
    struct st_context *st = st_context(ctx);
 
    /* Don't call st_finish() here.  It is not the state tracker's
@@ -104,11 +97,22 @@ st_glFlush(struct gl_context *ctx)
 
 
 /**
+ * Called via ctx->Driver.Flush()
+ */
+static void st_glFlush(struct gl_context *ctx)
+{
+   gpgpusimWait();
+   st_glFlush_base(ctx);
+}
+
+
+/**
  * Called via ctx->Driver.Finish()
  */
 static void
 st_glFinish(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
 
    st_finish(st);
@@ -156,6 +160,7 @@ st_device_reset_callback(void *data, enum pipe_reset_status status)
 static GLenum
 st_get_graphics_reset_status(struct gl_context *ctx)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    enum pipe_reset_status status;
 
@@ -189,6 +194,7 @@ st_init_flush_functions(struct pipe_screen *screen,
                         struct dd_function_table *functions)
 {
    functions->Flush = st_glFlush;
+   functions->Flush_base = st_glFlush_base;
    functions->Finish = st_glFinish;
 
    if (screen->get_param(screen, PIPE_CAP_DEVICE_RESET_STATUS_QUERY))

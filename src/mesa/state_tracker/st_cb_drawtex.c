@@ -162,6 +162,7 @@ static void
 st_DrawTex(struct gl_context *ctx, GLfloat x, GLfloat y, GLfloat z,
            GLfloat width, GLfloat height)
 {
+   gpgpusimWait();
    struct st_context *st = ctx->st;
    struct pipe_context *pipe = st->pipe;
    struct cso_context *cso = st->cso_context;

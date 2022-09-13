@@ -46,7 +46,7 @@ _mesa_Disable( GLenum cap );
 extern void GLAPIENTRY
 _mesa_Enable( GLenum cap );
 
-extern GLboolean GLAPIENTRY
+extern GLboolean GLAPIENTRY __attribute__((visibility("default")))
 _mesa_IsEnabled( GLenum cap );
 
 extern void
@@ -58,7 +58,7 @@ _mesa_Disablei( GLenum cap, GLuint index );
 extern void GLAPIENTRY
 _mesa_Enablei( GLenum cap, GLuint index );
 
-extern GLboolean GLAPIENTRY
+extern GLboolean GLAPIENTRY __attribute__((visibility("default")))
 _mesa_IsEnabledi( GLenum cap, GLuint index );
 
 extern void GLAPIENTRY

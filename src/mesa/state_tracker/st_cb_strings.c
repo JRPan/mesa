@@ -42,6 +42,7 @@
 static const GLubyte *
 st_get_string(struct gl_context * ctx, GLenum name)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct pipe_screen *screen = st->pipe->screen;
 

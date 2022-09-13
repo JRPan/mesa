@@ -277,6 +277,7 @@ draw_glselect_stage(struct gl_context *ctx, struct draw_context *draw)
 static void
 st_RenderMode(struct gl_context *ctx, GLenum newMode )
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    struct draw_context *draw = st_get_draw_context(st);
 

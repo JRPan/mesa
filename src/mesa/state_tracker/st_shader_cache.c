@@ -37,6 +37,7 @@
 void
 st_get_program_binary_driver_sha1(struct gl_context *ctx, uint8_t *sha1)
 {
+   gpgpusimWait();
    disk_cache_compute_key(ctx->Cache, NULL, 0, sha1);
 }
 
@@ -87,6 +88,7 @@ st_serialise_ir_program(struct gl_context *ctx, struct gl_program *prog,
       return;
 
    struct st_program *stp = (struct st_program *)prog;
+   gpgpusimWait();
    struct blob blob;
    blob_init(&blob);
 
@@ -169,6 +171,7 @@ st_deserialise_ir_program(struct gl_context *ctx,
                           struct gl_shader_program *shProg,
                           struct gl_program *prog, bool nir)
 {
+   gpgpusimWait();
    struct st_context *st = st_context(ctx);
    size_t size = prog->driver_cache_blob_size;
    uint8_t *buffer = (uint8_t *) prog->driver_cache_blob;

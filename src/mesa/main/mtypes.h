@@ -55,6 +55,9 @@
 extern "C" {
 #endif
 
+//used to block API calls when gpgpusim is busy
+extern bool gpgpusimIsBusy();
+void gpgpusimWait(void);
 #define GET_COLORMASK_BIT(mask, buf, chan) (((mask) >> (4 * (buf) + (chan))) & 0x1)
 #define GET_COLORMASK(mask, buf) (((mask) >> (4 * (buf))) & 0xf)
 

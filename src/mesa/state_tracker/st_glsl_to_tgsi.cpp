@@ -7375,6 +7375,7 @@ has_unsupported_control_flow(exec_list *ir,
 GLboolean
 st_link_tgsi(struct gl_context *ctx, struct gl_shader_program *prog)
 {
+   gpgpusimWait();
    struct pipe_screen *pscreen = ctx->st->pipe->screen;
 
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {

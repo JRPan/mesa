@@ -73,12 +73,14 @@ static void st_dispatch_compute_common(struct gl_context *ctx,
 static void st_dispatch_compute(struct gl_context *ctx,
                                 const GLuint *num_groups)
 {
+   gpgpusimWait();
    st_dispatch_compute_common(ctx, num_groups, NULL, NULL, 0);
 }
 
 static void st_dispatch_compute_indirect(struct gl_context *ctx,
                                          GLintptr indirect_offset)
 {
+   gpgpusimWait();
    struct gl_buffer_object *indirect_buffer = ctx->DispatchIndirectBuffer;
    struct pipe_resource *indirect = st_buffer_object(indirect_buffer)->buffer;
 
@@ -89,6 +91,7 @@ static void st_dispatch_compute_group_size(struct gl_context *ctx,
                                            const GLuint *num_groups,
                                            const GLuint *group_size)
 {
+   gpgpusimWait();
    st_dispatch_compute_common(ctx, num_groups, group_size, NULL, 0);
 }
 
