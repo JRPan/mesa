@@ -162,10 +162,10 @@ _mesa_program_state_flags(const gl_state_index16 state[STATE_LENGTH]);
 
 
 extern char *
-_mesa_program_state_string(const gl_state_index state[STATE_LENGTH]);
+_mesa_program_state_string(const gl_state_index16 state[STATE_LENGTH]);
 
 extern void __attribute__((visibility("default")))
-_mesa_fetch_state(struct gl_context *ctx, const gl_state_index state[],
+_mesa_fetch_state(struct gl_context *ctx, const gl_state_index16 state[],
                   gl_constant_value *val);
 
 #ifdef __cplusplus

@@ -1442,7 +1442,7 @@ gen_ptx_instruction(
      fprintf(inst_stream, "%s", ptx_opcodes[opcode].name);
      if(strlen(textureType) > 0)
        fprintf(inst_stream, ".%s", textureType);
-     fprintf(inst_stream, ".v2.f32.f32 ", dstCount);
+     fprintf(inst_stream, ".v2.f32.f32 %i", dstCount);
 
      writeMask = dst->Register.WriteMask;
      int maskBit = -1;
@@ -2066,14 +2066,14 @@ gen_ptx_immediate(
       case TGSI_IMM_FLOAT32:{
          union di d;
          d.ui = imm->u[i].Uint;
-         asprintf(&sd->reg_value, "0f%08x", d.ui);
+         asprintf(&sd->reg_value, "0f%08x", (unsigned) d.ui);
          //printf("replacing %s with %s\n", sd->reg_key, sd->reg_value);
          break;
       }
       case TGSI_IMM_UINT32:{
          union di d;
          d.ui = imm->u[i].Uint;
-         asprintf(&sd->reg_value, "0x%x", d.ui);
+         asprintf(&sd->reg_value, "0x%x", (unsigned) d.ui);
          //printf("replacing %s with %s\n", sd->reg_key, sd->reg_value);
          break;
       }

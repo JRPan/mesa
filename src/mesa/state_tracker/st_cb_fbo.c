@@ -933,10 +933,10 @@ st_MapRenderbuffer(struct gl_context *ctx,
                    struct gl_renderbuffer *rb,
                    GLuint x, GLuint y, GLuint w, GLuint h,
                    GLbitfield mode,
-                   GLubyte **mapOut, GLint *rowStrideOut)
+                   GLubyte **mapOut, GLint *rowStrideOut, bool flip_y)
 {
    gpgpusimWait();
-   st_MapRenderbuffer_base(ctx, rb, x, y, w, h, mode, mapOut, rowStrideOut);
+   st_MapRenderbuffer_base(ctx, rb, x, y, w, h, mode, mapOut, rowStrideOut,flip_y);
 }
 
 

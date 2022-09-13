@@ -60,7 +60,7 @@ extern void gpgpusimDoFragmentShading();
 void __attribute__((visibility("default"))) finalize_softpipe_draw_vbo(struct softpipe_context *sp, const void* mapped_indices);
 
 extern void finalize_softpipe_draw_vbo(struct softpipe_context *sp, const void* mapped_indices){
-   struct softpipe_context *softpipe = softpipe_context(sp);
+   // struct softpipe_context *softpipe = softpipe_context(sp);
    struct draw_context *draw = sp->draw;
    unsigned i;
 

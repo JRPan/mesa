@@ -53,7 +53,7 @@
  * This function is used for ARB vertex/fragment programs.
  * The program parser will produce the state[] values.
  */
-static void
+void
 _mesa_fetch_state(struct gl_context *ctx, const gl_state_index16 state[],
                   gl_constant_value *val)
 {

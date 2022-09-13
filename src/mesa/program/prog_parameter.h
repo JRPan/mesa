@@ -75,13 +75,6 @@ typedef enum
 /**
  * Actual data for constant values of parameters.
  */
-typedef union gl_constant_value
-{
-   GLfloat f;
-   GLint b;
-   GLint i;
-   GLuint u;
-} gl_constant_value;
 
 
 /**
