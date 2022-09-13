@@ -152,6 +152,7 @@ softpipe_draw_vbo(struct pipe_context *pipe,
    draw_collect_pipeline_statistics(draw,
                                     sp->active_statistics_queries > 0);
 
+   printf("info.count = %u\n",info->count);
    if(gpgpusimSimulationActive()){
      int frame_num, drawcall_num;
      const char* output_dir;

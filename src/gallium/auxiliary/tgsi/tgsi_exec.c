@@ -5447,7 +5447,6 @@ exec_instruction(
    union tgsi_exec_channel r[10];
 
    (*pc)++;
-
    switch (inst->Instruction.Opcode) {
    case TGSI_OPCODE_ARL:
       exec_vector_unary(mach, inst, micro_arl, TGSI_EXEC_DATA_INT, TGSI_EXEC_DATA_FLOAT);

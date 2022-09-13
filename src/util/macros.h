@@ -221,7 +221,7 @@ do {                       \
 #ifndef PUBLIC
 #  if defined(__GNUC__)
 #    define PUBLIC __attribute__((visibility("default")))
-#    define USED __attribute__((used))
+// #    define USED __attribute__((used))
 #  elif defined(_MSC_VER)
 #    define PUBLIC __declspec(dllexport)
 #    define USED
