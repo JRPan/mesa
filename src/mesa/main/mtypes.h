@@ -56,6 +56,7 @@ extern "C" {
 
 //used to block API calls when gpgpusim is busy
 extern bool gpgpusimIsBusy();
+extern void gpgpusimEndFragmentShading();
 void gpgpusimWait(void);
 
 /** Set a single bit */
@@ -3342,7 +3343,11 @@ struct gl_shared_state
    struct _mesa_HashTable *FrameBuffers;
 
    /* GL_ARB_sync */
+#ifndef GPGPUSIM
    struct set *SyncObjects;
+#else
+   struct ::set *SyncObjects;
+#endif
 
    /** GL_ARB_sampler_objects */
    struct _mesa_HashTable *SamplerObjects;
@@ -5101,7 +5106,11 @@ struct gl_context
    /*@{*/
    const void *vdpDevice;
    const void *vdpGetProcAddress;
+#ifndef GPGPUSIM
    struct set *vdpSurfaces;
+#else
+   struct ::set *vdpSurfaces;
+#endif
    /*@}*/
 
    /**

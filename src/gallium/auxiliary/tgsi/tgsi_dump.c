@@ -1397,6 +1397,13 @@ gen_ptx_instruction(
      printf("TGSI to PTX: instruction %s not supported.\n", ptx_opcodes[opcode].name);
      assert(0);
    }
+   if (ptx_opcodes[opcode].name == "UIF" || 
+         ptx_opcodes[opcode].name == "ELSE" || 
+         ptx_opcodes[opcode].name == "ENDIF")
+   {
+      printf("WARNING - control flow detected (IF) - checked TGSI\n");
+      return TRUE;
+   }
 
 
    //TODO
@@ -1439,7 +1446,8 @@ gen_ptx_instruction(
      }
 
      assert(dstCount >=0 && dstCount <= 4);
-     fprintf(inst_stream, "%s", ptx_opcodes[opcode].name);
+   //   fprintf(inst_stream, "%s", ptx_opcodes[opcode].name);
+     fprintf(inst_stream, "%s", "tex");
      if(strlen(textureType) > 0)
        fprintf(inst_stream, ".%s", textureType);
      fprintf(inst_stream, ".v2.f32.f32 ", dstCount);
@@ -1504,7 +1512,7 @@ gen_ptx_instruction(
    //e.g., exit, kill ..etc
    if(inst->Instruction.NumDstRegs==0 && inst->Instruction.NumSrcRegs==0){
      fprintf(inst_stream, "%s;\n", ptx_opcodes[opcode].name);
-     return TRUE;;
+     return TRUE;
    }
 
    //other instruction
@@ -1521,6 +1529,22 @@ gen_ptx_instruction(
         satStr = ".sat";
       }
    }
+   if (ptx_opcodes[opcode].name == "MIN"){
+      inst_name = "min";
+   } else if(ptx_opcodes[opcode].name == "FSLT"){
+      inst_name = "set.lt";
+   } else if(ptx_opcodes[opcode].name == "UCMP"){
+      inst_name = "mov";
+   } else if(ptx_opcodes[opcode].name == "ISHR"){
+      inst_name = "shr";
+   } else if(ptx_opcodes[opcode].name == "I2F"){
+      inst_name = "cvt";
+   } else if(ptx_opcodes[opcode].name == "FLR"){
+      inst_name = "cvt";
+   } else if(ptx_opcodes[opcode].name == "FRC"){
+      inst_name = "cvt";
+   }
+   
    asprintf(&ptxInst, "%s%s%s", inst_name, satStr, ptx_opcodes[opcode].ptx_type);
 
    bool dpOp = false;
@@ -1608,7 +1632,8 @@ gen_ptx_instruction(
 
           //const char * src_swizzle = get_src_swizzle(src, maskBit);
           const char* src_name = get_register_src_name(shader_type, src, maskBit);
-          snprintf((char*) &srcRegNames[src_i], 100, "%s%s", srcSign, src_name);
+          if (strcmp(src_name,"(null)") != 0)
+            snprintf((char*) &srcRegNames[src_i], 100, "%s%s", srcSign, src_name);
           free((void*)src_name);
 
           //first_reg = FALSE;
@@ -1901,8 +1926,15 @@ gen_ptx_declaration(
        }
      }
    }
-
-
+   if (strcmp(file_name, "CONST")) {
+      for (int i = 0; i < 13; i++)
+      {
+         fprintf(inst_stream, "%s %s%d%s;\n", regDef, "CONST", i, "x");
+         fprintf(inst_stream, "%s %s%d%s;\n", regDef, "CONST", i, "y");
+         fprintf(inst_stream, "%s %s%d%s;\n", regDef, "CONST", i, "z");
+         fprintf(inst_stream, "%s %s%d%s;\n", regDef, "CONST", i, "w");
+      }
+   }
    if (decl->Declaration.Array) {
       abort();
       /*TXT( ", ARRAY(" );

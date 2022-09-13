@@ -142,6 +142,7 @@ void gpgpusimWait(){
    while(gpgpusimIsBusy()){
       usleep(1);
    }
+   gpgpusimEndFragmentShading();
 }
 
 static void

@@ -608,6 +608,7 @@ get_texel_2d(const struct sp_sampler_view *sp_sview,
 
    if (x < 0 || x >= (int) u_minify(texture->width0, level) ||
        y < 0 || y >= (int) u_minify(texture->height0, level)) {
+      gpgpusimAddTexelFetch(x, y, addr.bits.level);
       return sp_samp->base.border_color.f;
    }
    else {

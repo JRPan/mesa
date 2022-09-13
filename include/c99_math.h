@@ -119,9 +119,10 @@ exp2(double d)
 /*
  * signbit() is a macro on Linux.  Not available on Windows.
  */
-#ifndef signbit
-#define signbit(x) ((x) < 0.0f)
-#endif
+// FIXME:
+// #ifndef signbit
+// #define signbit(x) ((x) < 0.0f)
+// #endif
 
 
 #ifndef M_PI
